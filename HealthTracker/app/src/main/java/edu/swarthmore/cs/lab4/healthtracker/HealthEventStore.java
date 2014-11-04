@@ -16,14 +16,6 @@ public class HealthEventStore {
     private HealthEventStore(Context appContext) {
         mAppContext = appContext;
         mHealthEventList = new ArrayList<HealthEvent>();
-
-        for (int i = 0; i < 100; i++) {
-            HealthEvent he = new HealthEvent();
-            he.setTitle("Health Event #" + i);
-            he.setTreated(i % 2 == 0); // Every other event is treated
-            mHealthEventList.add(he); // Add event to the list
-        }
-
     }
 
     public static HealthEventStore get(Context c) {
@@ -44,5 +36,9 @@ public class HealthEventStore {
             }
         }
         return null;
+    }
+
+    public void addHealthEvent(HealthEvent he) {
+        mHealthEventList.add(he);
     }
 }

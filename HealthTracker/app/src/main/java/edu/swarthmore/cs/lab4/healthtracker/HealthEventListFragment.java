@@ -11,6 +11,8 @@ import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import java.util.ArrayList;
 
@@ -24,6 +26,7 @@ public class HealthEventListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         getActivity().setTitle(R.string.health_events_header);
         mHealthEvents = HealthEventStore.get(getActivity()).getHealthEvents();
 
@@ -46,6 +49,12 @@ public class HealthEventListFragment extends ListFragment {
         Intent i = new Intent(getActivity(), HealthActivity.class);
         i.putExtra(HealthFragment.EXTRA_HEALTHEVENT_ID, he.getId());
         startActivity(i);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.action, menu);
     }
 
     private class HealthEventAdapter extends ArrayAdapter<HealthEvent> {
