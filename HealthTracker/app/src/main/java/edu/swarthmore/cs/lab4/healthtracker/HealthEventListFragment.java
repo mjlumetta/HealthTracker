@@ -1,9 +1,11 @@
 package edu.swarthmore.cs.lab4.healthtracker;
 
+import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -55,6 +57,23 @@ public class HealthEventListFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.action, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_item_new_event) {
+            HealthEvent he = new HealthEvent();
+            HealthEventStore.get(getActivity()).addHealthEvent(he);
+            Intent i = new Intent(getActivity(), HealthActivity.class);
+            i.putExtra(HealthFragment.EXTRA_HEALTHEVENT_ID, he.getId());
+            startActivity(i);
+            return true;
+        }
+        else {
+            Log.d(TAG, "Item id is " + String.valueOf(item.getItemId()));
+            Log.d(TAG, "Correct id is " + String.valueOf(R.id.menu_item_new_event));
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private class HealthEventAdapter extends ArrayAdapter<HealthEvent> {
