@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import android.util.Log;
 
 /**
  * Created by mlumett1 on 10/21/14.
@@ -12,10 +13,20 @@ public class HealthEventStore {
     private static HealthEventStore sEventStore;
     private Context mAppContext;
     private ArrayList<HealthEvent> mHealthEventList;
+    private HealthEventIntentJSONSerializer mSerializer;
+
+    private static final String JSON_FILENAME = "healthEvents.json";
+    private static final String TAG = "HealthEventStore";
 
     private HealthEventStore(Context appContext) {
         mAppContext = appContext;
-        mHealthEventList = new ArrayList<HealthEvent>();
+        mSerializer = new HealthEventIntentJSONSerializer(mAppContext, JSON_FILENAME);
+        try {
+            mHealthEventList = mSerializer.loadHealthEvents();
+        } catch (Exception e) {
+            mHealthEventList = new ArrayList<HealthEvent>();
+            Log.e(TAG, "Error loading Health Events: ", e);
+        }
     }
 
     public static HealthEventStore get(Context c) {
@@ -40,5 +51,16 @@ public class HealthEventStore {
 
     public void addHealthEvent(HealthEvent he) {
         mHealthEventList.add(he);
+    }
+
+    public boolean saveHealthEvents() {
+        try {
+            mSerializer.saveHealthEvents(mHealthEventList);
+            Log.d(TAG, "Health events saved to file.");
+            return true;
+        } catch (Exception e) {
+            Log.d(TAG, "Error saving Health Events: ", e);
+            return false;
+        }
     }
 }

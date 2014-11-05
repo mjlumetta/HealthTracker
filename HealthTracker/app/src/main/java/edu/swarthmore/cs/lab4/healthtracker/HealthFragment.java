@@ -95,4 +95,10 @@ public class HealthFragment extends Fragment {
 
         return v;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        HealthEventStore.get(getActivity()).saveHealthEvents();
+    }
 }
